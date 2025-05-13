@@ -8,7 +8,7 @@ OBJ = $(SRC:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJ) philo.h Makefile
-	$(CC) $(OBJ) -o $(NAME) -g3 -fsanitize=address
+	$(CC) $(OBJ) -o $(NAME) -g3 -fsanitize=thread
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

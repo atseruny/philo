@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 17:58:50 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/12 16:01:39 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/13 20:44:48 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,47 @@ unsigned long long	get_time(t_philo *philo)
 	return diff;
 }
 
+
+unsigned long long	real_time(void)
+{
+	struct timeval		now;
+	unsigned long long	time;
+
+	gettimeofday(&now, NULL);
+	time = now.tv_sec * 1000 + now.tv_usec / 1000;
+	return (time);
+}
+
+
 void	usleep_func(t_philo *philo, int time)
 {
-	if (philo->isdead == 1 || philo->table->isdead == 1)
-		return ;
-	usleep(time);
+	unsigned long long	start;
+
+	start = real_time();
+	while (real_time() - start < (unsigned long long)time)
+	{
+		if (philo->isdead == 1 || philo->table->isdead == 1)
+			return ;
+		usleep(1000);
+		/* code */
+	}
+	
+	// while (i < time)
+	// {
+	// 	if (philo->isdead == 1 || philo->table->isdead == 1)
+	// 		return ;
+	// 	usleep(3000);
+	// 	i += 3000;
+	// }
+	// usleep(time/2);
+	// if (philo->isdead == 1 || philo->table->isdead == 1)
+	// 	return ;
+	// usleep(time/2);
 }
 
 void	*life(void *arg)
 {
-	t_philo *philo;
+	t_philo	*philo;
 	
 	philo = (t_philo *)arg;
 	if (philo->index % 2 == 1)
@@ -53,12 +84,12 @@ void	*life(void *arg)
 int	is_hungry(t_philo *philo)
 {
 	struct timeval	now;
-	int		diff;
+	int				diff;
 	
 	gettimeofday(&now, NULL);
 	diff = (now.tv_sec - philo->ishungry->tv_sec) * 1000 + 
 	(now.tv_usec - philo->ishungry->tv_usec) / 1000;
-	return diff;
+	return (diff);
 }
 
 
@@ -109,42 +140,3 @@ void	start(t_table *table)
 
 
 
-
-
-
-
-
-
-
-
-
-// int mails=0;
-// int prime[5] = {2, 3, 5, 7, 11};
-
-// void *route(void *arg)
-// {
-// 	int i = *(int *)arg;
-// 	printf("%d\n", prime[i]);
-// }
-
-// int main()
-// {
-// 	pthread_t th[5];
-// 	time_t t;
-// 	t=time(NULL);
-// 	printf("Time is: %ld", t);
-// 	pthread_mutex_t mutex;
-// 	pthread_mutex_init(&mutex, NULL);
-// 	for (int i = 0; i < 5; i++)
-// 	{
-// 		if (pthread_create(th + i, NULL, &route, &i) != 0)
-// 			return 1;
-// 	}
-// 	for (int i = 0; i < 5; i++)
-// 	{
-// 		if (pthread_join(th[i], NULL) != 0)
-// 			return 1;
-// 	}
-// 	pthread_mutex_destroy(&mutex);
-
-// }
