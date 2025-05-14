@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 17:31:37 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/13 20:48:39 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/14 17:59:11 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,37 +14,48 @@
 
 int	is_eating(t_philo *philo)
 {
-	// if (philo->curr_meal == philo->table->must_eat)
-	// 	return (1);
-	// if (philo->isdead == 1 || philo->table->isdead == 1)
+	if (philo->curr_meal == philo->table->must_eat)
+		return (1);
+	if (check_if_dead(philo) == 1)
+		return (0);
+	if (philo->index % 2 == 0)
+	{
+		pthread_mutex_lock(philo->left);
+		pthread_mutex_lock(philo->right);
+	}
+	else
+	{
+		pthread_mutex_lock(philo->right);
+		pthread_mutex_lock(philo->left);
+	}
+	// pthread_mutex_lock(philo->left);
+	// if (check_if_dead(philo) == 1)
+	// {
+	// 	pthread_mutex_unlock(philo->left);
 	// 	return (0);
-	pthread_mutex_lock(philo->left);
-	if (philo->isdead == 1 || philo->table->isdead == 1)
-	{
-		pthread_mutex_unlock(philo->left);
-		return (0);
-	}
-	printf("[%llu] %d took the left fork\n", get_time(philo), philo->index + 1);
-	pthread_mutex_lock(philo->right);
-	if (philo->isdead == 1 || philo->table->isdead == 1)
-	{
-		pthread_mutex_unlock(philo->left);
-		pthread_mutex_unlock(philo->right);
-		return (0);
-	}
-	printf("[%llu] %d took the right fork\n", get_time(philo), philo->index + 1);
+	// }
+	// printf("[%llu] %d took the left fork\n", get_time(philo), philo->index + 1);
+	// pthread_mutex_lock(philo->right);
+	// if (check_if_dead(philo) == 1)
+	// {
+	// 	pthread_mutex_unlock(philo->left);
+	// 	pthread_mutex_unlock(philo->right);
+	// 	return (0);
+	// }
+	// printf("[%llu] %d took the right fork\n", get_time(philo), philo->index + 1);
+	printf("[%llu] %d took the forks\n", get_time(philo), philo->index + 1);
 	philo->curr_meal++;
 	printf("[%llu] %d is eating\n", get_time(philo), philo->index + 1);
 	gettimeofday(philo->ishungry, NULL);
 	usleep_func(philo, philo->table->eat_time);
-	pthread_mutex_unlock(philo->right);
 	pthread_mutex_unlock(philo->left);
+	pthread_mutex_unlock(philo->right);
 	return (1);
 }
 
 int	is_sleeping(t_philo *philo)
 {
-	if (philo->isdead == 1 || philo->table->isdead == 1)
+	if (check_if_dead(philo) == 1)
 		return (0);
 	printf("[%llu] %d is sleeping\n", get_time(philo), philo->index + 1);
 	usleep_func(philo, philo->table->sleep_time);
@@ -53,7 +64,7 @@ int	is_sleeping(t_philo *philo)
 
 int	is_thinking(t_philo *philo)
 {
-	if (philo->isdead == 1 || philo->table->isdead == 1)
+	if (check_if_dead(philo) == 1)
 		return (0);
 	printf("[%llu] %d is thinking\n", get_time(philo), philo->index + 1);
 	return (1);

@@ -6,31 +6,11 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 20:27:39 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/12 15:57:58 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/14 17:35:58 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	free_all(t_table *table)
-{
-	int	i;
-
-	i = 0;
-	free(table->start_time);
-	pthread_mutex_destroy(table->death);
-	free(table->death);
-	while (i < table->num_philo)
-	{
-		free(table->philos[i]->ishungry);
-		pthread_mutex_destroy(table->forks[i]);
-		free(table->forks[i]);
-		free(table->philos[i]);
-		i++;
-	}
-	free(table->forks);
-	free(table->philos);
-}
 
 int	ft_strlen(const char *str)
 {
@@ -66,11 +46,7 @@ void	get_philo(t_philo *philo, t_table *table, int i)
 	philo->curr_meal = 0;
 	philo->left = table->forks[i];
 	philo->table = table;
-	if (i == philo->table->num_philo - 1)
-		philo->right = table->forks[0];
-	else 
-		philo->right = table->forks[i+1];
-
+	philo->right = table->forks[(i + 1) % table->num_philo];
 }
 
 void	get_table(int argc, char **argv, t_table *table)

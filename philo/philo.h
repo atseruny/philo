@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 20:28:51 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/12 15:28:31 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/14 17:36:34 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ int					ft_strlen(const char *str);
 int					ft_isdigit(int c);
 void				start(t_table *table);
 unsigned long long	get_time(t_philo *philo);
+unsigned long long	real_time(void);
 int					is_hungry(t_philo *philo);
 int					is_eating(t_philo *philo);
 int					is_sleeping(t_philo *philo);
@@ -62,6 +63,7 @@ int					is_thinking(t_philo *philo);
 void				usleep_func(t_philo *philo, int time);
 void				is_dead(t_table *table);
 void				free_all(t_table *table);
+int					check_if_dead(t_philo *philo);
 
 
 #endif
