@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 17:31:37 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/14 17:59:11 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/14 20:14:52 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,21 +28,6 @@ int	is_eating(t_philo *philo)
 		pthread_mutex_lock(philo->right);
 		pthread_mutex_lock(philo->left);
 	}
-	// pthread_mutex_lock(philo->left);
-	// if (check_if_dead(philo) == 1)
-	// {
-	// 	pthread_mutex_unlock(philo->left);
-	// 	return (0);
-	// }
-	// printf("[%llu] %d took the left fork\n", get_time(philo), philo->index + 1);
-	// pthread_mutex_lock(philo->right);
-	// if (check_if_dead(philo) == 1)
-	// {
-	// 	pthread_mutex_unlock(philo->left);
-	// 	pthread_mutex_unlock(philo->right);
-	// 	return (0);
-	// }
-	// printf("[%llu] %d took the right fork\n", get_time(philo), philo->index + 1);
 	printf("[%llu] %d took the forks\n", get_time(philo), philo->index + 1);
 	philo->curr_meal++;
 	printf("[%llu] %d is eating\n", get_time(philo), philo->index + 1);
@@ -83,8 +68,9 @@ void	is_dead(t_table *table)
 			table->isdead = 1;
 			table->philos[i]->isdead = 1;
 			pthread_mutex_unlock(table->death);
-			printf("[%llu] %d is dead\n", get_time(table->philos[i]), table->philos[i]->index + 1);
-			break;
+			printf("[%llu] %d is dead\n", get_time(table->philos[i]),
+				table->philos[i]->index + 1);
+			break ;
 		}
 		i = (i + 1) % table->num_philo;
 	}

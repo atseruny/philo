@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 20:27:39 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/14 17:35:58 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/14 20:17:27 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,14 +89,14 @@ void	get_table(int argc, char **argv, t_table *table)
 	}
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	int		i;
 	t_table	table;
 
+	i = 1;
 	if (argc < 5 || argc > 6)
 		return (1);
-	i = 1;
 	while (argv[i] != NULL)
 	{
 		if (is_valid(argv[i]) == 0)

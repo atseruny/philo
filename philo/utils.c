@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:34:20 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/14 17:36:03 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/14 20:18:04 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	free_all(t_table *table)
 int	check_if_dead(t_philo *philo)
 {
 	int	death;
+
 	pthread_mutex_lock(philo->table->death);
 	if (philo->isdead == 0 && philo->table->isdead == 0)
 		death = 0;
@@ -50,9 +51,9 @@ unsigned long long	get_time(t_philo *philo)
 	unsigned long long	diff;
 
 	gettimeofday(&now, NULL);
-	diff = (now.tv_sec - philo->table->start_time->tv_sec) * 1000 +
-	(now.tv_usec - philo->table->start_time->tv_usec) / 1000;
-	return diff;
+	diff = (now.tv_sec - philo->table->start_time->tv_sec) * 1000
+		+ (now.tv_usec - philo->table->start_time->tv_usec) / 1000;
+	return (diff);
 }
 
 unsigned long long	real_time(void)

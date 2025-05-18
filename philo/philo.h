@@ -6,23 +6,22 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 20:28:51 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/14 17:36:34 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/14 20:14:11 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
-#define PHILO_H
+# define PHILO_H
 
-#include <unistd.h>
-#include <stdio.h>
-#include <pthread.h>
-#include <stdlib.h>
-#include <time.h>
-#include <sys/time.h>
+# include <unistd.h>
+# include <stdio.h>
+# include <pthread.h>
+# include <stdlib.h>
+# include <time.h>
+# include <sys/time.h>
 
-
-typedef struct s_philo t_philo;
-typedef struct s_table t_table;
+typedef struct s_philo	t_philo;
+typedef struct s_table	t_table;
 
 struct s_table
 {
@@ -64,6 +63,5 @@ void				usleep_func(t_philo *philo, int time);
 void				is_dead(t_table *table);
 void				free_all(t_table *table);
 int					check_if_dead(t_philo *philo);
-
 
 #endif
