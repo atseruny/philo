@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 20:28:51 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/14 20:14:11 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/18 20:48:09 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,9 @@ struct s_table
 	int				sleep_time;
 	int				must_eat;
 	int				isdead;
+	long long		start_time;
+	int				kusht;
 	pthread_mutex_t	*death;
-	struct timeval	*start_time;
 	t_philo			**philos;
 	pthread_mutex_t	**forks;
 };
@@ -42,7 +43,7 @@ struct s_philo
 	int				index;
 	int				curr_meal;
 	int				isdead;
-	struct timeval	*ishungry;
+	long long		ishungry;
 	pthread_t		th;
 	pthread_mutex_t	*left;
 	pthread_mutex_t	*right;
@@ -53,9 +54,8 @@ int					ft_atoi(char *str);
 int					ft_strlen(const char *str);
 int					ft_isdigit(int c);
 void				start(t_table *table);
-unsigned long long	get_time(t_philo *philo);
-unsigned long long	real_time(void);
-int					is_hungry(t_philo *philo);
+long long			real_time(void);
+long long			is_hungry(t_philo *philo);
 int					is_eating(t_philo *philo);
 int					is_sleeping(t_philo *philo);
 int					is_thinking(t_philo *philo);

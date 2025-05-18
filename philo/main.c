@@ -6,21 +6,11 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 20:27:39 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/14 20:17:27 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/18 21:02:38 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-int	ft_strlen(const char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] != '\0')
-		i++;
-	return (i);
-}
 
 int	is_valid(char *s)
 {
@@ -47,6 +37,7 @@ void	get_philo(t_philo *philo, t_table *table, int i)
 	philo->left = table->forks[i];
 	philo->table = table;
 	philo->right = table->forks[(i + 1) % table->num_philo];
+	philo->ishungry = 0;
 }
 
 void	get_table(int argc, char **argv, t_table *table)
@@ -59,26 +50,25 @@ void	get_table(int argc, char **argv, t_table *table)
 	table->eat_time = ft_atoi(argv[3]);
 	table->isdead = 0;
 	table->sleep_time = ft_atoi(argv[4]);
+	table->kusht = 0;
 	if (argc == 6)
 		table->must_eat = ft_atoi(argv[5]);
 	else
 		table->must_eat = -1;
-	table->start_time = malloc(sizeof(struct timeval));
 	table->philos = malloc(table->num_philo * sizeof(t_philo *));
 	table->forks = malloc(table->num_philo * sizeof(pthread_mutex_t *));
 	table->death = malloc(sizeof(pthread_mutex_t));
 	pthread_mutex_init(table->death, NULL);
-	if (!table->start_time || !table->philos || !table->forks)
+	if (!table->philos || !table->forks)
 		return ;
 	while (i < table->num_philo)
 	{
 		table->philos[i] = malloc(sizeof(t_philo));
 		table->forks[i] = malloc(sizeof(pthread_mutex_t));
-		table->philos[i]->ishungry = malloc(sizeof(struct timeval));
-		if (!table->philos[i] || !table->forks[i] || !table->philos[i]->ishungry)
+		if (!table->philos[i] || !table->forks[i])
 			return ;
 		pthread_mutex_init(table->forks[i], NULL);
-		get_philo((table->philos)[i], table, i);
+		// get_philo((table->philos)[i], table, i);
 		i++;
 	}
 	i = 0;

@@ -6,22 +6,52 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 17:58:50 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/14 20:15:59 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/18 21:07:50 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+void	is_dead(t_table *table)
+{
+	int	i;
+
+	i = 0;
+	while (1)
+	{
+		if (is_hungry(table->philos[i]) > (long long)table->death_time)
+		{
+			pthread_mutex_lock(table->death);
+			table->isdead = 1;
+			table->philos[i]->isdead = 1;
+			pthread_mutex_unlock(table->death);
+			printf("[%lld] %d died\n", real_time() - table->start_time,
+				table->philos[i]->index + 1);
+			break ;
+		}
+		if (table->kusht >= table->num_philo)
+		{
+			pthread_mutex_lock(table->death);
+			table->isdead = 1;
+			table->philos[i]->isdead = 1;
+			pthread_mutex_unlock(table->death);
+			printf("[%lld] dinner is over\n", real_time() - table->start_time);
+			break ;
+		}
+		i = (i + 1) % table->num_philo;
+	}
+}
+
 void	usleep_func(t_philo *philo, int time)
 {
-	unsigned long long	start;
+	long long	start;
 
 	start = real_time();
-	while (real_time() - start < (unsigned long long)time)
+	while (real_time() - start < (long long)time)
 	{
 		if (check_if_dead(philo) == 1)
 			return ;
-		usleep(1000);
+		usleep(1200);
 	}
 }
 
@@ -44,14 +74,11 @@ void	*life(void *arg)
 	return (NULL);
 }
 
-int	is_hungry(t_philo *philo)
+long long	is_hungry(t_philo *philo)
 {
-	struct timeval	now;
-	int				diff;
+	long long	diff;
 
-	gettimeofday(&now, NULL);
-	diff = (now.tv_sec - philo->ishungry->tv_sec) * 1000
-		+ (now.tv_usec - philo->ishungry->tv_usec) / 1000;
+	diff = real_time() - (philo->ishungry);
 	return (diff);
 }
 
@@ -60,10 +87,10 @@ void	start(t_table *table)
 	int	i;
 
 	i = 0;
-	gettimeofday(table->start_time, NULL);
+	table->start_time = real_time();
 	while (i < table->num_philo)
 	{
-		gettimeofday(table->philos[i]->ishungry, NULL);
+		table->philos[i]->ishungry = real_time();
 		pthread_create(&table->philos[i]->th, NULL, &life, table->philos[i]);
 		i++;
 	}
