@@ -5,54 +5,41 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/06 17:58:50 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/18 21:07:50 by atseruny         ###   ########.fr       */
+/*   Created: 2025/05/20 17:27:51 by atseruny          #+#    #+#             */
+/*   Updated: 2025/05/23 19:44:09 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	is_dead(t_table *table)
-{
-	int	i;
-
-	i = 0;
-	while (1)
-	{
-		if (is_hungry(table->philos[i]) > (long long)table->death_time)
-		{
-			pthread_mutex_lock(table->death);
-			table->isdead = 1;
-			table->philos[i]->isdead = 1;
-			pthread_mutex_unlock(table->death);
-			printf("[%lld] %d died\n", real_time() - table->start_time,
-				table->philos[i]->index + 1);
-			break ;
-		}
-		if (table->kusht >= table->num_philo)
-		{
-			pthread_mutex_lock(table->death);
-			table->isdead = 1;
-			table->philos[i]->isdead = 1;
-			pthread_mutex_unlock(table->death);
-			printf("[%lld] dinner is over\n", real_time() - table->start_time);
-			break ;
-		}
-		i = (i + 1) % table->num_philo;
-	}
-}
-
 void	usleep_func(t_philo *philo, int time)
 {
-	long long	start;
+	unsigned long long	start;
 
 	start = real_time();
-	while (real_time() - start < (long long)time)
+	while (real_time() - start < (unsigned long long)time)
 	{
 		if (check_if_dead(philo) == 1)
 			return ;
-		usleep(1200);
+		usleep(100);
 	}
+}
+
+void	print_mess(t_philo *philo, char *mess)
+{
+	if (check_if_dead(philo) == 1)
+		return ;
+	pthread_mutex_lock(&philo->table->kusht_mutex);
+	if (philo->table->kusht >= philo->table->num_philo)
+	{
+		pthread_mutex_unlock(&philo->table->kusht_mutex);
+		return ;
+	}
+	pthread_mutex_unlock(&philo->table->kusht_mutex);
+	pthread_mutex_lock(&philo->table->print_mutex);
+	printf("[%llu] %d %s", real_time() - philo->table->start_time,
+		philo->index, mess);
+	pthread_mutex_unlock(&philo->table->print_mutex);
 }
 
 void	*life(void *arg)
@@ -60,42 +47,51 @@ void	*life(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	if (philo->index % 2 == 1)
+	if (philo->index % 2 == 0)
 		usleep(100);
 	while (check_if_dead(philo) == 0)
 	{
-		if (is_eating(philo) == 0)
-			break ;
-		if (is_sleeping(philo) == 0)
-			break ;
-		if (is_thinking(philo) == 0)
-			break ;
+		if (eating(philo) == 0)
+			return (NULL);
+		if (sleeping(philo) == 0)
+			return (NULL);
+		if (thinking(philo) == 0)
+			return (NULL);
 	}
 	return (NULL);
 }
 
-long long	is_hungry(t_philo *philo)
-{
-	long long	diff;
-
-	diff = real_time() - (philo->ishungry);
-	return (diff);
-}
-
 void	start(t_table *table)
 {
-	int	i;
+	int			i;
+	pthread_t	death;
+	// pthread_t	eat;
 
 	i = 0;
 	table->start_time = real_time();
 	while (i < table->num_philo)
 	{
-		table->philos[i]->ishungry = real_time();
 		pthread_create(&table->philos[i]->th, NULL, &life, table->philos[i]);
-		i++;
+		pthread_mutex_lock(&table->philos[i]->last_meal_mutex);
+		table->philos[i]->last_meal = real_time();
+		pthread_mutex_unlock(&table->philos[i++]->last_meal_mutex);
 	}
+	usleep(50);
+	pthread_create(&death, NULL, &alive, table);
+	// if (table->must_eat != -1)
+	// 	pthread_create(&eat, NULL, &eat_count, table);
+	pthread_join(death, NULL);
+	// if (table->must_eat != -1)
+	// 	pthread_join(eat, NULL);
 	i = 0;
-	is_dead(table);
 	while (i < table->num_philo)
 		pthread_join(table->philos[i++]->th, NULL);
+}
+
+unsigned long long	real_time(void)
+{
+	struct timeval		now;
+
+	gettimeofday(&now, NULL);
+	return (now.tv_sec * 1000 + now.tv_usec / 1000);
 }

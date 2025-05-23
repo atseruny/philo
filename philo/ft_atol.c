@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   ft_atol.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 15:03:30 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/05 18:46:19 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/20 17:06:25 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	ft_isdigit(int c)
 {
-	if (c >= 48 && c <= 57)
+	if (c >= '0' && c <= '9')
 		return (1);
 	return (0);
 }
@@ -52,25 +52,22 @@ int	ft_isspace(char s)
 	return (0);
 }
 
-int	ft_atoi(char *str)
+int	ft_atol(char *str)
 {
 	int			i;
 	long long	num;
 
 	num = 0;
 	i = 0;
-	if ((char)str[i] == '+')
-		i++;
 	while (str[i] == '0')
-		i++;
-	str += i;
+		str++;
 	i = 0;
 	while (str[i] != '\0' && ft_isdigit(str[i]) == 1)
 		i++;
 	if (str[i] != '\0' || ft_strlen(str) > 11)
 		return (-1);
 	num = ft_num(i, str);
-	if (num > 2147483647 || num < -2147483648)
+	if (num > 2147483647)
 		return (-1);
 	return ((int)num);
 }

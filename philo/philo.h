@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/04 20:28:51 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/18 20:48:09 by atseruny         ###   ########.fr       */
+/*   Created: 2025/05/20 16:15:37 by atseruny          #+#    #+#             */
+/*   Updated: 2025/05/23 19:45:19 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,43 +25,49 @@ typedef struct s_table	t_table;
 
 struct s_table
 {
-	int				num_philo;
-	int				death_time;
-	int				eat_time;
-	int				sleep_time;
-	int				must_eat;
-	int				isdead;
-	long long		start_time;
-	int				kusht;
-	pthread_mutex_t	*death;
-	t_philo			**philos;
-	pthread_mutex_t	**forks;
+	int					num_philo;
+	int					eat_time;
+	int					sleep_time;
+	int					must_eat;
+	int					dead_philo;
+	int					kusht;
+	unsigned long long	death_time;
+	unsigned long long	start_time;
+	t_philo				**philos;
+	pthread_mutex_t		dead;
+	pthread_mutex_t		must_mutex;
+	pthread_mutex_t		kusht_mutex;
+	pthread_mutex_t		print_mutex;
+	pthread_mutex_t		**forks;
 };
 
 struct s_philo
 {
-	int				index;
-	int				curr_meal;
-	int				isdead;
-	long long		ishungry;
-	pthread_t		th;
-	pthread_mutex_t	*left;
-	pthread_mutex_t	*right;
-	t_table			*table;
+	int					index;
+	int					curr_meal;
+	int					isdead;
+	unsigned long long	last_meal;
+	pthread_t			th;
+	pthread_mutex_t		last_meal_mutex;
+	pthread_mutex_t		curr_meal_mutex;
+	pthread_mutex_t		*left;
+	pthread_mutex_t		*right;
+	t_table				*table;
 };
 
-int					ft_atoi(char *str);
-int					ft_strlen(const char *str);
 int					ft_isdigit(int c);
-void				start(t_table *table);
-long long			real_time(void);
-long long			is_hungry(t_philo *philo);
-int					is_eating(t_philo *philo);
-int					is_sleeping(t_philo *philo);
-int					is_thinking(t_philo *philo);
-void				usleep_func(t_philo *philo, int time);
-void				is_dead(t_table *table);
-void				free_all(t_table *table);
+int					ft_atol(char *str);
+int					ft_strlen(char *str);
+unsigned long long	real_time(void);
+int					eating(t_philo *philo);
+int					sleeping(t_philo *philo);
+int					thinking(t_philo *philo);
 int					check_if_dead(t_philo *philo);
+void				print_mess(t_philo *philo, char *mess);
+void				start(t_table *table);
+void				usleep_func(t_philo *philo, int time);
+void				*alive(void *arg);
+void				free_all(t_table *table);
+void				*eat_count(void *arg);
 
 #endif

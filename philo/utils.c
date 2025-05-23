@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/14 17:34:20 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/18 19:49:14 by atseruny         ###   ########.fr       */
+/*   Created: 2025/05/20 17:09:13 by atseruny          #+#    #+#             */
+/*   Updated: 2025/05/23 19:29:18 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_strlen(const char *str)
+int	ft_strlen(char *str)
 {
 	int	i;
 
@@ -27,38 +27,19 @@ void	free_all(t_table *table)
 	int	i;
 
 	i = 0;
-	pthread_mutex_destroy(table->death);
-	free(table->death);
+	pthread_mutex_destroy(&table->dead);
+	pthread_mutex_destroy(&table->kusht_mutex);
+	pthread_mutex_destroy(&table->print_mutex);
 	while (i < table->num_philo)
 	{
+		pthread_mutex_destroy(&table->philos[i]->curr_meal_mutex);
+		pthread_mutex_destroy(&table->philos[i]->last_meal_mutex);
 		pthread_mutex_destroy(table->forks[i]);
+
 		free(table->forks[i]);
 		free(table->philos[i]);
 		i++;
 	}
 	free(table->forks);
 	free(table->philos);
-}
-
-int	check_if_dead(t_philo *philo)
-{
-	int	death;
-
-	pthread_mutex_lock(philo->table->death);
-	if (philo->isdead == 0 && philo->table->isdead == 0)
-		death = 0;
-	else
-		death = 1;
-	pthread_mutex_unlock(philo->table->death);
-	return (death);
-}
-
-long long	real_time(void)
-{
-	struct timeval		now;
-	unsigned long long	time;
-
-	gettimeofday(&now, NULL);
-	time = now.tv_sec * 1000 + now.tv_usec / 1000;
-	return (time);
 }
