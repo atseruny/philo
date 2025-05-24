@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 16:16:03 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/24 17:58:07 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/24 19:06:41 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	is_valid(char *s)
 			return (0);
 		i++;
 	}
-	if (ft_atol(s) == -1)
+	if (ft_atol(s) <= 0)
 		return (0);
 	return (1);
 }

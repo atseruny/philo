@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 18:56:12 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/24 18:05:16 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/24 19:49:01 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	*eat_count(void *arg)
 	i = 0;
 	while (1)
 	{
-		
+		// usleep(50);
 		pthread_mutex_lock(&table->kusht_mutex);
 		if (table->kusht >= table->num_philo)
 		{
@@ -56,25 +56,17 @@ void	*alive(void *arg)
 	i = 0;
 	while (1)
 	{
-		// while (i < table->num_philo)
-		// {
-			// pthread_mutex_lock(&table->must_mutex);
-			// if (table->must_eat != -1)
-			// {
-			// 	pthread_mutex_unlock(&table->must_mutex);
-			// 	pthread_mutex_lock(&table->kusht_mutex);
-			// 	if (table->kusht >= table->num_philo)
-			// 	{
-			// 		pthread_mutex_unlock(&table->kusht_mutex);
-			// 		set_dead(table->philos[i]);
-			// 		pthread_mutex_lock(&table->print_mutex);
-			// 		printf("[%lld] dinner is over\n", real_time() - table->start_time);
-			// 		return (pthread_mutex_unlock(&table->print_mutex), NULL);
-			// 	}
-			// 	pthread_mutex_unlock(&table->kusht_mutex);
-			// }
-			// pthread_mutex_unlock(&table->must_mutex);
-		// usleep(100);
+		pthread_mutex_lock(&table->kusht_mutex);
+		// printf("kushts: %d\n", table->kusht)
+		if (table->kusht >= table->num_philo)
+		{
+			pthread_mutex_unlock(&table->kusht_mutex);
+			set_dead(table->philos[i]);
+			pthread_mutex_lock(&table->print_mutex);
+			printf("[%lld] dinner is over\n", real_time() - table->start_time);
+			return (NULL);
+		}
+		pthread_mutex_unlock(&table->kusht_mutex);
 		pthread_mutex_lock(&table->philos[i]->last_meal_mutex);
 		if ((real_time() - table->philos[i]->last_meal) > table->death_time)
 		{
@@ -82,19 +74,16 @@ void	*alive(void *arg)
 			set_dead(table->philos[i]);
 			pthread_mutex_lock(&table->print_mutex);
 			printf("[%llu] %d died\n", real_time() - table->start_time, i + 1);
-			return (pthread_mutex_unlock(&table->print_mutex), NULL);
+			return (NULL);
 		}
 		pthread_mutex_unlock(&table->philos[i]->last_meal_mutex);
-		usleep(50);
 		
-		pthread_mutex_lock(&table->kusht_mutex);
-		if (table->kusht >= table->num_philo)
-			return (pthread_mutex_unlock(&table->kusht_mutex), NULL);
-		pthread_mutex_unlock(&table->kusht_mutex);
-			// i++;
+		// pthread_mutex_lock(&table->kusht_mutex);
+		// if (table->kusht >= table->num_philo)
+		// 	return (pthread_mutex_unlock(&table->kusht_mutex), NULL);
+		// pthread_mutex_unlock(&table->kusht_mutex);
 		i = (i + 1) % table->num_philo;
-			
-		// }
+		usleep(100);
 	}
 	return (NULL);
 }
