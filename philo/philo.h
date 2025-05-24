@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 16:15:37 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/23 19:45:19 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/24 17:58:04 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ struct s_table
 	unsigned long long	start_time;
 	t_philo				**philos;
 	pthread_mutex_t		dead;
-	pthread_mutex_t		must_mutex;
+	// pthread_mutex_t		must_mutex;
 	pthread_mutex_t		kusht_mutex;
 	pthread_mutex_t		print_mutex;
 	pthread_mutex_t		**forks;

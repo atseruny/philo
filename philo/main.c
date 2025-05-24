@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 16:16:03 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/23 19:45:47 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/24 17:58:07 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	get_table(int argc, char **argv, t_table *table)
 	table->kusht = 0;
 	pthread_mutex_init(&table->dead, NULL);
 	pthread_mutex_init(&table->print_mutex, NULL);
-	pthread_mutex_init(&table->must_mutex, NULL);
+	// pthread_mutex_init(&table->must_mutex, NULL);
 	pthread_mutex_init(&table->kusht_mutex, NULL);
 	table->philos = malloc(table->num_philo * sizeof(t_philo *));
 	table->forks = malloc(table->num_philo * sizeof(pthread_mutex_t *));

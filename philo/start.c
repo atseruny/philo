@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 17:27:51 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/23 19:44:09 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/24 18:04:27 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	usleep_func(t_philo *philo, int time)
 	{
 		if (check_if_dead(philo) == 1)
 			return ;
-		usleep(100);
+		usleep(50);
 	}
 }
 
@@ -48,7 +48,7 @@ void	*life(void *arg)
 
 	philo = (t_philo *)arg;
 	if (philo->index % 2 == 0)
-		usleep(100);
+		usleep(1000);
 	while (check_if_dead(philo) == 0)
 	{
 		if (eating(philo) == 0)
@@ -65,7 +65,7 @@ void	start(t_table *table)
 {
 	int			i;
 	pthread_t	death;
-	// pthread_t	eat;
+	pthread_t	eat;
 
 	i = 0;
 	table->start_time = real_time();
@@ -76,13 +76,13 @@ void	start(t_table *table)
 		table->philos[i]->last_meal = real_time();
 		pthread_mutex_unlock(&table->philos[i++]->last_meal_mutex);
 	}
-	usleep(50);
+	usleep(200);
 	pthread_create(&death, NULL, &alive, table);
-	// if (table->must_eat != -1)
-	// 	pthread_create(&eat, NULL, &eat_count, table);
+	if (table->must_eat != -1)
+		pthread_create(&eat, NULL, &eat_count, table);
 	pthread_join(death, NULL);
-	// if (table->must_eat != -1)
-	// 	pthread_join(eat, NULL);
+	if (table->must_eat != -1)
+		pthread_join(eat, NULL);
 	i = 0;
 	while (i < table->num_philo)
 		pthread_join(table->philos[i++]->th, NULL);
