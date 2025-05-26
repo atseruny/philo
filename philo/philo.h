@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 16:15:37 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/24 17:58:04 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/26 18:48:40 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,13 @@ struct s_table
 	int					sleep_time;
 	int					must_eat;
 	int					dead_philo;
-	int					kusht;
+	// int					kusht;
 	unsigned long long	death_time;
 	unsigned long long	start_time;
 	t_philo				**philos;
 	pthread_mutex_t		dead;
 	// pthread_mutex_t		must_mutex;
-	pthread_mutex_t		kusht_mutex;
+	// pthread_mutex_t		kusht_mutex;
 	pthread_mutex_t		print_mutex;
 	pthread_mutex_t		**forks;
 };
@@ -68,6 +68,7 @@ void				start(t_table *table);
 void				usleep_func(t_philo *philo, int time);
 void				*alive(void *arg);
 void				free_all(t_table *table);
+void				*ft_calloc(int count, int size);
 void				*eat_count(void *arg);
 
 #endif

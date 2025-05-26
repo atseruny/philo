@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 17:09:13 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/23 19:29:18 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/26 17:44:34 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	free_all(t_table *table)
 
 	i = 0;
 	pthread_mutex_destroy(&table->dead);
-	pthread_mutex_destroy(&table->kusht_mutex);
+	// pthread_mutex_destroy(&table->kusht_mutex);
 	pthread_mutex_destroy(&table->print_mutex);
 	while (i < table->num_philo)
 	{

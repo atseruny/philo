@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 14:54:26 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/24 19:34:32 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/26 20:00:29 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,11 +68,11 @@ int	eating(t_philo *philo)
 	pthread_mutex_lock(&philo->curr_meal_mutex);
 	if (philo->curr_meal == philo->table->must_eat)
 	{
-		pthread_mutex_lock(&philo->table->kusht_mutex);
-		philo->table->kusht++;
-		pthread_mutex_unlock(&philo->table->kusht_mutex);
+		pthread_mutex_unlock(&philo->curr_meal_mutex);
+		return (0);
 	}
 	pthread_mutex_unlock(&philo->curr_meal_mutex);
+
 	return (1);
 }
 

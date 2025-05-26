@@ -2,14 +2,14 @@ CC = cc
 NAME = philo
 CFLAGS = -Wall -Wextra -Werror
 
-SRC = main.c ft_atol.c utils.c start.c routine.c actions.c
+SRC = main.c ft_atol.c ft_calloc.c utils.c start.c routine.c actions.c
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJ) philo.h Makefile
 	$(CC) $(OBJ) -o $(NAME) 
-#-g3 -fsanitize=address
+#-g3 -fsanitize=thread
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
