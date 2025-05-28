@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 17:27:51 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/26 20:03:40 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/28 17:04:49 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,16 @@ void	usleep_func(t_philo *philo, int time)
 	start = real_time();
 	while (real_time() - start < (unsigned long long)time)
 	{
-		if (check_if_dead(philo) == 1)
+		if (check_if_dead(philo))
 			return ;
-		usleep(50);
+		usleep(100);
 	}
 }
 
 void	print_mess(t_philo *philo, char *mess)
 {
 	pthread_mutex_lock(&philo->table->print_mutex);
-	if (check_if_dead(philo) == 1)
+	if (check_if_dead(philo))
 	{
 		pthread_mutex_unlock(&philo->table->print_mutex);
 		return ;
@@ -45,13 +45,13 @@ void	*life(void *arg)
 	philo = (t_philo *)arg;
 	if (philo->index % 2 == 0)
 		usleep_func(philo, philo->table->eat_time - 10);
-	while (check_if_dead(philo) == 0)
+	while (!check_if_dead(philo))
 	{
-		if (eating(philo) == 0)
+		if (!eating(philo))
 			break;
-		else if (sleeping(philo) == 0)
+		if (!sleeping(philo))
 			break;
-		else if (thinking(philo) == 0)
+		if (!thinking(philo))
 			break;
 	}
 	return (NULL);
@@ -61,25 +61,23 @@ void	start(t_table *table)
 {
 	int			i;
 	pthread_t	death;
-	pthread_t	eat;
 
 	i = 0;
 	table->start_time = real_time();
 	while (i < table->num_philo)
 	{
-		pthread_create(&table->philos[i]->th, NULL, &life, table->philos[i]);
 		pthread_mutex_lock(&table->philos[i]->last_meal_mutex);
 		table->philos[i]->last_meal = table->start_time;
-		pthread_mutex_unlock(&table->philos[i++]->last_meal_mutex);
+		pthread_mutex_unlock(&table->philos[i]->last_meal_mutex);
+		pthread_create(&table->philos[i]->th, NULL, &life, table->philos[i]);
+		i++;
 	}
-	usleep(100);
-	pthread_create(&eat, NULL, &eat_count, table);
-	pthread_create(&death, NULL, &alive, table);
+	usleep(50);
+	pthread_create(&death, NULL, &monitor, table);
 	i = 0;
 	while (i < table->num_philo)
 		pthread_join(table->philos[i++]->th, NULL);
 	pthread_join(death, NULL);
-	pthread_join(eat, NULL);
 }
 
 unsigned long long	real_time(void)
