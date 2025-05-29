@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 17:27:51 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/28 20:39:18 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/29 20:51:16 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,12 +72,10 @@ void	start(t_table *table)
 		else
 			i++;
 	}
-	// // usleep(50);
-	while (1)
-	{
-		if (alive(table) || eat_count(table))
-			break ;
-	}
+
+	//in philos process create 2 threads the life and the monitoring
+
+
 	i = 0;
 	while (i < table->num_philo)
 		waitpid(table->philos[i++]->pid, NULL, 0);
