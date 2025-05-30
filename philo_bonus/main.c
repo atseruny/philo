@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 16:16:03 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/28 20:57:42 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/30 18:41:59 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,16 @@ void	get_table(int argc, char **argv, t_table *table)
 	table->philos = ft_calloc(table->num_philo, sizeof(t_philo *));
 	if (!table->philos)
 		return ;
+	sem_unlink("/forks");
+	sem_unlink("/print");
+	sem_unlink("/dead");
+	sem_unlink("/dead_check");
+	sem_unlink("/last");
+	sem_unlink("/curr");
 	table->semaphores = sem_open("/forks", O_CREAT | O_EXCL, 0644, table->num_philo);
 	table->print_sem = sem_open("/print", O_CREAT | O_EXCL, 0644, 1);
-	table->dead_sem = sem_open("/dead", O_CREAT | O_EXCL, 0644, 1);
+	table->dead_sem = sem_open("/dead", O_CREAT | O_EXCL, 0644, 0);
+	table->dead_check = sem_open("/dead_check", O_CREAT | O_EXCL, 0644, 1);
 	table->curr_meal_sem = sem_open("/curr", O_CREAT | O_EXCL, 0644, 1);
 	table->last_meal_sem = sem_open("/last", O_CREAT | O_EXCL, 0644, 1);
 	get_table_sharunak(table);

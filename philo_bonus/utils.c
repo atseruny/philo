@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 17:09:13 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/28 20:52:02 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/30 18:42:47 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,10 @@ void	free_all(t_table *table)
 	// sem_close(table->print_sem);
 	sem_unlink("/forks");
 	sem_unlink("/dead");
+	sem_unlink("/curr");
+	sem_unlink("/last");
+	sem_unlink("/dead_chek");
+
 	sem_unlink("/print");
 	while (i < table->num_philo)
 	{

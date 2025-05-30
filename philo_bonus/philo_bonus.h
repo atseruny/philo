@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 16:15:37 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/28 20:52:22 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/30 18:42:12 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <fcntl.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
+# include <signal.h>
 
 
 typedef struct s_philo	t_philo;
@@ -40,6 +41,7 @@ struct s_table
 	sem_t				*semaphores;
 	sem_t				*print_sem;
 	sem_t				*dead_sem;
+	sem_t				*dead_check;
 	sem_t				*curr_meal_sem;
 	sem_t				*last_meal_sem;
 	t_philo				**philos;
@@ -51,6 +53,7 @@ struct s_philo
 	int					curr_meal;
 	int					isdead;
 	unsigned long long	last_meal;
+	pthread_t			th;
 	pid_t				pid;
 	t_table				*table;
 };
@@ -68,7 +71,7 @@ void				start(t_table *table);
 void				usleep_func(t_philo *philo, int time);
 void				free_all(t_table *table);
 void				*ft_calloc(int count, int size);
-int					alive(t_table *table);
-int					eat_count(t_table *table);
+void				*monitor(void *arg);
+
 
 #endif

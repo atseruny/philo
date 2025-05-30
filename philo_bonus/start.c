@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 17:27:51 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/29 20:51:16 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/30 18:43:59 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,16 @@ void	print_mess(t_philo *philo, char *mess)
 	sem_post(philo->table->print_sem);
 }
 
-void	life(void *arg)
+void	*life(void *arg)
 {
 	t_philo	*philo;
+	int		i;
 
+	i = 0;
 	philo = (t_philo *)arg;
 	if (philo->index % 2 == 0)
 		usleep_func(philo, philo->table->eat_time - 10);
-	while (!check_if_dead(philo))
+	while (1)
 	{
 		if (!eating(philo))
 			break;
@@ -54,6 +56,20 @@ void	life(void *arg)
 		if (!thinking(philo))
 			break;
 	}
+	return (NULL);
+}
+
+void	not_life_yet(t_philo *philo)
+{
+	pthread_t	death;
+
+	sem_wait(philo->table->last_meal_sem);
+	philo->last_meal = philo->table->start_time;
+	sem_post(philo->table->last_meal_sem);
+	pthread_create(&philo->th, NULL, &life, philo);
+	pthread_create(&death, NULL, &monitor, philo);
+	pthread_join(philo->th, NULL);
+	pthread_join(death, NULL);
 	exit (0);
 }
 
@@ -68,18 +84,25 @@ void	start(t_table *table)
 		table->philos[i]->last_meal = table->start_time;
 		table->philos[i]->pid = fork();
 		if (table->philos[i]->pid == 0)
-			life(table->philos[i]);
+			not_life_yet(table->philos[i]);
 		else
 			i++;
 	}
-
-	//in philos process create 2 threads the life and the monitoring
-
-
+	sem_wait(table->dead_sem);
 	i = 0;
 	while (i < table->num_philo)
-		waitpid(table->philos[i++]->pid, NULL, 0);
+	{
+		kill(table->philos[i]->pid, SIGTERM);
+		i++;
+	}
 
+	// Wait for all processes to terminate
+	i = 0;
+	while (i < table->num_philo)
+	{
+		waitpid(table->philos[i]->pid, NULL, 0);
+		i++;
+	}
 }
 
 unsigned long long	real_time(void)
