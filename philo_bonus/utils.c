@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 17:09:13 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/30 18:42:47 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/31 16:32:35 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,25 +26,22 @@ void	free_all(t_table *table)
 	int	i;
 	
 	i = 0;
-	// sem_close(table->semaphores);
-	// sem_close(table->dead_sem);
-	// sem_close(table->print_sem);
+	sem_close(table->semaphores);
+	sem_close(table->dead_sem);
+	sem_close(table->meals);
+	sem_close(table->curr_meal_sem);
+	sem_close(table->last_meal_sem);
+	sem_close(table->dead_check);
+	sem_close(table->print_sem);
 	sem_unlink("/forks");
 	sem_unlink("/dead");
 	sem_unlink("/curr");
+	sem_unlink("/meals");
 	sem_unlink("/last");
 	sem_unlink("/dead_chek");
-
 	sem_unlink("/print");
 	while (i < table->num_philo)
-	{
-		// sem_close(table->philos[i]->curr_meal_sem);
-		// sem_close(table->philos[i]->last_meal_sem);
-		sem_unlink("/curr");
-		sem_unlink("/last");
-		free(table->philos[i]);
-		i++;
-	}
+		free(table->philos[i++]);
 	free(table->philos);
 }
 

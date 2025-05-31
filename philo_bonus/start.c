@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 17:27:51 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/30 18:43:59 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/31 17:54:53 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,27 +76,34 @@ void	not_life_yet(t_philo *philo)
 void	start(t_table *table)
 {
 	int		i;
-
+	pthread_t	eat;
+	
+	
 	i = 0;
 	table->start_time = real_time();
 	while (i < table->num_philo)
 	{
 		table->philos[i]->last_meal = table->start_time;
 		table->philos[i]->pid = fork();
-		if (table->philos[i]->pid == 0)
-			not_life_yet(table->philos[i]);
-		else
-			i++;
+		if (table->philos[i]->pid == -1)
+		{
+			free_all(table);
+			exit (1);
+		}
+		else if (table->philos[i]->pid == 0)
+		not_life_yet(table->philos[i]);
+		i++;
 	}
+	pthread_create(&eat, NULL, &eat_count, table);
+	pthread_join(eat, NULL);
 	sem_wait(table->dead_sem);
 	i = 0;
 	while (i < table->num_philo)
 	{
-		kill(table->philos[i]->pid, SIGTERM);
+		if (table->philos[i]->pid > 0)
+			kill(table->philos[i]->pid, SIGKILL);
 		i++;
 	}
-
-	// Wait for all processes to terminate
 	i = 0;
 	while (i < table->num_philo)
 	{

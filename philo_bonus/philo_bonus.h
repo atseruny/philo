@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 16:15:37 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/30 18:42:12 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/05/31 17:44:22 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ struct s_table
 	sem_t				*dead_sem;
 	sem_t				*dead_check;
 	sem_t				*curr_meal_sem;
+	sem_t				*meals;
 	sem_t				*last_meal_sem;
 	t_philo				**philos;
 };
@@ -52,6 +53,7 @@ struct s_philo
 	int					index;
 	int					curr_meal;
 	int					isdead;
+	int					has_reported_meal;
 	unsigned long long	last_meal;
 	pthread_t			th;
 	pid_t				pid;
@@ -72,6 +74,6 @@ void				usleep_func(t_philo *philo, int time);
 void				free_all(t_table *table);
 void				*ft_calloc(int count, int size);
 void				*monitor(void *arg);
-
+void				*eat_count(void *arg);
 
 #endif
