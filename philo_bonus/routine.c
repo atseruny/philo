@@ -6,26 +6,50 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 18:56:12 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/31 18:01:34 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/06/01 19:11:23 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
+void	*killl(void *arg)
+{
+	int		i;
+	t_table	*table;
+
+	table = (t_table *)arg;
+	sem_wait(table->dead_sem);
+	i = 0;
+	while (i < table->num_philo)
+		kill(table->philos[i++]->pid, SIGKILL);
+	return (NULL);
+}
+
 void	*eat_count(void *arg)
 {
 	t_table	*table;
-	int		k = 0;
-
+	int		i; 
+	
+	i = 0;
 	table = (t_table *)arg;
-	while (k < table->num_philo)
+	if (table->must_eat == -1)
+		return (NULL);
+	while (i < table->num_philo)
 	{
+		sem_wait(table->dead_check);
+		if (table->dead_philo)
+		{
+			sem_post(table->dead_check);
+			return (NULL);
+		}
+		sem_post(table->dead_check);
 		sem_wait(table->meals);
-		k++;
+		i++;
 	}
 	sem_post(table->dead_sem);
 	return (NULL);
 }
+
 
 void	*monitor(void *arg)
 {
@@ -41,6 +65,9 @@ void	*monitor(void *arg)
 		if ((time - philo->last_meal) > philo->table->death_time)
 		{
 			sem_post(philo->table->last_meal_sem);
+			sem_wait(philo->table->dead_check);
+			philo->table->dead_philo = 1;
+			sem_post(philo->table->dead_check);
 			sem_wait(philo->table->print_sem);
 			printf("[%llu] %d died\n", time - philo->table->start_time, philo->index);
 			sem_post(philo->table->print_sem);

@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 16:15:37 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/31 17:44:22 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/06/01 17:28:12 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,5 +75,6 @@ void				free_all(t_table *table);
 void				*ft_calloc(int count, int size);
 void				*monitor(void *arg);
 void				*eat_count(void *arg);
+void				*killl(void *arg);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 17:27:51 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/31 17:54:53 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/06/01 19:11:55 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,13 +77,12 @@ void	start(t_table *table)
 {
 	int		i;
 	pthread_t	eat;
-	
+	pthread_t	dead;
 	
 	i = 0;
 	table->start_time = real_time();
 	while (i < table->num_philo)
 	{
-		table->philos[i]->last_meal = table->start_time;
 		table->philos[i]->pid = fork();
 		if (table->philos[i]->pid == -1)
 		{
@@ -91,25 +90,16 @@ void	start(t_table *table)
 			exit (1);
 		}
 		else if (table->philos[i]->pid == 0)
-		not_life_yet(table->philos[i]);
+			not_life_yet(table->philos[i]);
 		i++;
 	}
 	pthread_create(&eat, NULL, &eat_count, table);
+	pthread_create(&dead, NULL, &killl, table);
+	i = 0;
+	while (i < table->num_philo)
+		waitpid(table->philos[i++]->pid, NULL, 0);
 	pthread_join(eat, NULL);
-	sem_wait(table->dead_sem);
-	i = 0;
-	while (i < table->num_philo)
-	{
-		if (table->philos[i]->pid > 0)
-			kill(table->philos[i]->pid, SIGKILL);
-		i++;
-	}
-	i = 0;
-	while (i < table->num_philo)
-	{
-		waitpid(table->philos[i]->pid, NULL, 0);
-		i++;
-	}
+	pthread_join(dead, NULL);
 }
 
 unsigned long long	real_time(void)
