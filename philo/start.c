@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 17:27:51 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/28 17:04:49 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/06/03 17:45:15 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,11 @@ void	*life(void *arg)
 	while (!check_if_dead(philo))
 	{
 		if (!eating(philo))
-			break;
+			break ;
 		if (!sleeping(philo))
-			break;
+			break ;
 		if (!thinking(philo))
-			break;
+			break ;
 	}
 	return (NULL);
 }

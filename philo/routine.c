@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 18:56:12 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/28 17:03:20 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/06/03 17:44:50 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ int	eat_count(t_table *table)
 	while (i < table->num_philo)
 	{
 		pthread_mutex_lock(&table->philos[i]->curr_meal_mutex);
-		if (table->must_eat != -1 && table->philos[i]->curr_meal >= table->must_eat)
+		if (table->must_eat != -1
+			&& table->philos[i]->curr_meal >= table->must_eat)
 			k++;
 		pthread_mutex_unlock(&table->philos[i]->curr_meal_mutex);
 		i++;

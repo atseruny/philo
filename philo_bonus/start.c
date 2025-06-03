@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 17:27:51 by atseruny          #+#    #+#             */
-/*   Updated: 2025/06/01 19:11:55 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/06/03 19:55:23 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,11 @@ void	*life(void *arg)
 	while (1)
 	{
 		if (!eating(philo))
-			break;
+			break ;
 		if (!sleeping(philo))
-			break;
+			break ;
 		if (!thinking(philo))
-			break;
+			break ;
 	}
 	return (NULL);
 }
@@ -70,15 +70,16 @@ void	not_life_yet(t_philo *philo)
 	pthread_create(&death, NULL, &monitor, philo);
 	pthread_join(philo->th, NULL);
 	pthread_join(death, NULL);
+	closing(philo->table);
 	exit (0);
 }
 
 void	start(t_table *table)
 {
-	int		i;
+	int			i;
 	pthread_t	eat;
 	pthread_t	dead;
-	
+
 	i = 0;
 	table->start_time = real_time();
 	while (i < table->num_philo)
@@ -100,12 +101,4 @@ void	start(t_table *table)
 		waitpid(table->philos[i++]->pid, NULL, 0);
 	pthread_join(eat, NULL);
 	pthread_join(dead, NULL);
-}
-
-unsigned long long	real_time(void)
-{
-	struct timeval		now;
-
-	gettimeofday(&now, NULL);
-	return (now.tv_sec * 1000 + now.tv_usec / 1000);
 }

@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 17:09:13 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/31 16:32:35 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/06/03 20:25:41 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,22 @@ int	ft_strlen(char *str)
 		i++;
 	return (i);
 }
+
+void	closing(t_table *table)
+{
+	sem_close(table->semaphores);
+	sem_close(table->dead_sem);
+	sem_close(table->meals);
+	sem_close(table->curr_meal_sem);
+	sem_close(table->last_meal_sem);
+	sem_close(table->dead_check);
+	sem_close(table->print_sem);
+}
+
 void	free_all(t_table *table)
 {
 	int	i;
-	
+
 	i = 0;
 	sem_close(table->semaphores);
 	sem_close(table->dead_sem);

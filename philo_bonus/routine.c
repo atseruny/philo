@@ -6,11 +6,19 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 18:56:12 by atseruny          #+#    #+#             */
-/*   Updated: 2025/06/01 19:11:23 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/06/03 20:25:54 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
+
+unsigned long long	real_time(void)
+{
+	struct timeval		now;
+
+	gettimeofday(&now, NULL);
+	return (now.tv_sec * 1000 + now.tv_usec / 1000);
+}
 
 void	*killl(void *arg)
 {
@@ -21,28 +29,26 @@ void	*killl(void *arg)
 	sem_wait(table->dead_sem);
 	i = 0;
 	while (i < table->num_philo)
+	{
+		sem_post(table->meals);
 		kill(table->philos[i++]->pid, SIGKILL);
+	}
 	return (NULL);
 }
 
 void	*eat_count(void *arg)
 {
 	t_table	*table;
-	int		i; 
-	
+	int		i;
+
 	i = 0;
 	table = (t_table *)arg;
 	if (table->must_eat == -1)
 		return (NULL);
 	while (i < table->num_philo)
 	{
-		sem_wait(table->dead_check);
-		if (table->dead_philo)
-		{
-			sem_post(table->dead_check);
+		if (check_if_dead(table->philos[i]))
 			return (NULL);
-		}
-		sem_post(table->dead_check);
 		sem_wait(table->meals);
 		i++;
 	}
@@ -50,32 +56,31 @@ void	*eat_count(void *arg)
 	return (NULL);
 }
 
-
 void	*monitor(void *arg)
 {
-	unsigned long long time;
-	int					i;
+	unsigned long long	time;
+	t_philo				*philo;
 
-	i = 0;
-	t_philo *philo = (t_philo *)arg;
+	philo = (t_philo *)arg;
 	while (1)
-	{ 
+	{
 		time = real_time();
 		sem_wait(philo->table->last_meal_sem);
 		if ((time - philo->last_meal) > philo->table->death_time)
 		{
 			sem_post(philo->table->last_meal_sem);
+			sem_post(philo->table->dead_sem);
+			sem_wait(philo->table->print_sem);
+			printf("[%llu] %d is dead\n", time - philo->table->start_time,
+				philo->index);
 			sem_wait(philo->table->dead_check);
 			philo->table->dead_philo = 1;
+			philo->isdead = 1;
 			sem_post(philo->table->dead_check);
-			sem_wait(philo->table->print_sem);
-			printf("[%llu] %d died\n", time - philo->table->start_time, philo->index);
-			sem_post(philo->table->print_sem);
-			sem_post(philo->table->dead_sem);
 			return (NULL);
 		}
 		sem_post(philo->table->last_meal_sem);
-		usleep(500); 
+		usleep(500);
 	}
 	return (NULL);
 }

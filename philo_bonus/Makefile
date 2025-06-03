@@ -9,7 +9,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ) philo_bonus.h Makefile
 	$(CC) $(OBJ) -o $(NAME) 
-#-g3 -fsanitize=address
+# -g3 -fsanitize=address
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

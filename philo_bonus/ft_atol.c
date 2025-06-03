@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 15:03:30 by atseruny          #+#    #+#             */
-/*   Updated: 2025/05/28 18:43:53 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/06/03 20:13:23 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ int	ft_atol(char *str)
 
 	num = 0;
 	i = 0;
+	if (*str == '+')
+		str++;
 	while (*str == '0')
 		str++;
 	while (str[i] != '\0' && ft_isdigit(str[i]))
