@@ -6,7 +6,7 @@
 /*   By: atseruny <atseruny@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 16:16:03 by atseruny          #+#    #+#             */
-/*   Updated: 2025/06/03 20:04:22 by atseruny         ###   ########.fr       */
+/*   Updated: 2025/06/03 20:32:49 by atseruny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,11 @@ int	main(int argc, char **argv)
 	int		i;
 	t_table	table;
 
-	i = 1;
+	i = 2;
 	if (argc < 5 || argc > 6)
 		return (write(2, "Wrong number of arguments\n", 26), 1);
+	if (is_valid(argv[1]) && ft_atol(argv[1]) > 200)
+		return (write(2, "Invalid input\n", 14), 1);
 	while (argv[i] != NULL)
 		if (!is_valid(argv[i++]))
 			return (write(2, "Invalid input\n", 14), 1);
